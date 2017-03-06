@@ -1,0 +1,77 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`greek-circle`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="greek-circle">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <svg width="200" height="200" id="ring" fill="[[color]]">
+      <defs>
+        <mask id="hole">
+          <rect width="100%" height="100%" fill="white"/>
+          <circle r="40" cx="100" cy="100" fill="#000"/>
+        </mask>
+      </defs>
+      
+      <circle id="donut" r="70" cx="100" cy="100" mask="url(#hole)" />
+    </svg>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'greek-circle',
+
+      properties: {
+        color: {
+          type: String,
+          value: '#1ba6c5',
+        },
+      },
+
+      ready: function() {
+        //this.$.name.textContent = this.tagName;
+        this.$.ring.setAttribute('fill', this.color);
+
+        for(var i=0;i<20;i++){
+          var color = `rgba(255,255,255,.4)`;
+          var rotate = `rotate(${i*18},100,100)`;
+          var polygon = makeSVG('polygon', {
+            fill: color,
+            points: "100,50 100,40 90,40",
+            transform: rotate
+          });
+          this.$.ring.appendChild(polygon);
+        }
+
+        for(var i=0;i<20;i++){
+          var color = `rgba(255,255,255,.2)`;
+          var rotate = `rotate(${i*18},100,100)`;
+          var polygon = makeSVG('polygon', {
+            fill: color,
+            points: "100,50 90,50 100,40",
+            transform: rotate
+          });
+          this.$.ring.appendChild(polygon);
+        }
+      }
+
+    });
+
+    function makeSVG(tag, attrs) {
+        var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (var k in attrs)
+            el.setAttribute(k, attrs[k]);
+        return el;
+    }
+  </script>
+</dom-module>
